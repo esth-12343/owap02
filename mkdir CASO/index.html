@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Security Misconfiguration – Caso Práctico | OWASP A02:2025</title>
+  <meta name="description" content="Caso práctico interactivo sobre Security Misconfiguration, una de las vulnerabilidades más críticas del OWASP Top 10 2021." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Particle Background -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo-group">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <div>
+          <span class="logo-title">SecMisconfig</span>
+          <span class="logo-sub">OWASP A02:2025</span>
+        </div>
+      </div>
+      <nav class="main-nav">
+        <a href="#teoria" class="nav-link">Teoría</a>
+        <a href="#labs" class="nav-link">Labs</a>
+        <a href="#mitigacion" class="nav-link">Mitigación</a>
+        <a href="#checklist" class="nav-link">Checklist</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      OWASP Top 10 · A02:2025
+    </div>
+    <h1 class="hero-title">
+      Security<br/><span class="gradient-text">Misconfiguration</span>
+    </h1>
+    <p class="hero-subtitle">
+      La vulnerabilidad más frecuente en aplicaciones modernas.<br/>
+      Explora ataques reales, demostraciones interactivas y estrategias de defensa.
+    </p>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <span class="stat-number">90%</span>
+        <span class="stat-label">de apps probadas fueron vulnerables</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">#5</span>
+        <span class="stat-label">en OWASP Top 10 2021</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">208</span>
+        <span class="stat-label">CWEs mapeados</span>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <span>Explora los laboratorios</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- TEORIA -->
+  <section class="section" id="teoria">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">01 · Fundamentos</span>
+        <h2 class="section-title">¿Qué es Security Misconfiguration?</h2>
+        <p class="section-desc">Ocurre cuando la configuración de seguridad no se define, implementa o mantiene correctamente, dejando sistemas expuestos a ataques.</p>
+      </div>
+
+      <div class="teoria-grid">
+        <div class="teoria-card" data-delay="0">
+          <div class="teoria-icon red">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          </div>
+          <h3>Credenciales por Defecto</h3>
+          <p>Contraseñas y usuarios que vienen preconfigurados en sistemas y no son cambiados: <code>admin/admin</code>, <code>root/toor</code>.</p>
+        </div>
+        <div class="teoria-card" data-delay="100">
+          <div class="teoria-icon orange">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <h3>Archivos Sensibles Expuestos</h3>
+          <p>Archivos de configuración accesibles públicamente: <code>.env</code>, <code>config.yml</code>, <code>backup.sql</code>.</p>
+        </div>
+        <div class="teoria-card" data-delay="200">
+          <div class="teoria-icon yellow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <h3>Mensajes de Error Verbosos</h3>
+          <p>Stack traces y errores detallados que revelan rutas, versiones de software e información interna del sistema.</p>
+        </div>
+        <div class="teoria-card" data-delay="300">
+          <div class="teoria-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <h3>Listado de Directorios</h3>
+          <p>Servidores web que muestran el contenido de directorios cuando no hay archivo index, exponiendo toda la estructura.</p>
+        </div>
+        <div class="teoria-card" data-delay="400">
+          <div class="teoria-icon purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          </div>
+          <h3>Headers de Seguridad Faltantes</h3>
+          <p>Ausencia de cabeceras HTTP críticas como CSP, HSTS, X-Frame-Options que protegen contra ataques del lado cliente.</p>
+        </div>
+        <div class="teoria-card" data-delay="500">
+          <div class="teoria-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+          </div>
+          <h3>Modo Debug en Producción</h3>
+          <p>Aplicaciones con modo debug activo en producción exponen código fuente, variables de entorno y paneles de administración.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LABS -->
+  <section class="section dark-section" id="labs">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">02 · Laboratorios Interactivos</span>
+        <h2 class="section-title">Demostraciones en Vivo</h2>
+        <p class="section-desc">Simula ataques reales en un entorno controlado y seguro. Aprende cómo cada misconfiguration puede ser explotada.</p>
+      </div>
+
+      <!-- Lab Tabs -->
+      <div class="lab-tabs">
+        <button class="lab-tab active" data-tab="lab1" id="tab-lab1">🔑 Credenciales por Defecto</button>
+        <button class="lab-tab" data-tab="lab2" id="tab-lab2">📁 Archivos Expuestos</button>
+        <button class="lab-tab" data-tab="lab3" id="tab-lab3">💥 Error Verboso</button>
+        <button class="lab-tab" data-tab="lab4" id="tab-lab4">🔒 Headers HTTP</button>
+        <button class="lab-tab" data-tab="lab5" id="tab-lab5">🐛 Modo Debug</button>
+      </div>
+
+      <!-- Lab 1: Default Credentials -->
+      <div class="lab-panel active" id="lab1">
+        <div class="lab-layout">
+          <div class="lab-info">
+            <div class="lab-badge danger">CRÍTICO</div>
+            <h3>Lab 01 – Credenciales por Defecto</h3>
+            <p>Muchos sistemas se despliegan con credenciales predeterminadas que los administradores olvidan cambiar. Un atacante simplemente prueba combinaciones conocidas para obtener acceso total.</p>
+            <div class="vuln-detail">
+              <div class="vuln-item">
+                <strong>CWE-1392</strong> · Uso de credenciales predeterminadas
+              </div>
+              <div class="vuln-item">
+                <strong>Impacto:</strong> Acceso no autorizado, control total del sistema
+              </div>
+              <div class="vuln-item">
+                <strong>Sistemas afectados:</strong> Routers, CMS, Bases de datos, APIs
+              </div>
+            </div>
+            <div class="common-creds">
+              <h4>Credenciales más comunes:</h4>
+              <div class="cred-grid">
+                <span class="cred-pill" data-user="admin" data-pass="admin">admin / admin</span>
+                <span class="cred-pill" data-user="admin" data-pass="password">admin / password</span>
+                <span class="cred-pill" data-user="root" data-pass="root">root / root</span>
+                <span class="cred-pill" data-user="admin" data-pass="123456">admin / 123456</span>
+                <span class="cred-pill" data-user="user" data-pass="user">user / user</span>
+                <span class="cred-pill" data-user="administrator" data-pass="">administrator / (vacío)</span>
+              </div>
+            </div>
+          </div>
+          <div class="lab-demo">
+            <div class="browser-mockup">
+              <div class="browser-bar">
+                <div class="browser-dots">
+                  <span class="dot red-dot"></span>
+                  <span class="dot yellow-dot"></span>
+                  <span class="dot green-dot"></span>
+                </div>
+                <div class="browser-url">🔒 http://192.168.1.1/admin/login</div>
+              </div>
+              <div class="browser-content">
+                <div class="fake-login" id="fakeLogin">
+                  <div class="fake-logo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="12" cy="10" r="3"/>
+                      <path d="M7 21v-2a4 4 0 014-4h2a4 4 0 014 4v2"/>
+                    </svg>
+                    <span>Router Admin Panel</span>
+                  </div>
+                  <div class="fake-form">
+                    <div class="fake-input-group">
+                      <label>Username</label>
+                      <input type="text" id="attackUser" value="" placeholder="Username" class="fake-input" />
+                    </div>
+                    <div class="fake-input-group">
+                      <label>Password</label>
+                      <input type="password" id="attackPass" value="" placeholder="Password" class="fake-input" />
+                    </div>
+                    <button class="fake-btn" id="loginAttemptBtn">Login</button>
+                  </div>
+                  <div class="login-result" id="loginResult"></div>
+                </div>
+                <div class="admin-panel hidden" id="adminPanel">
+                  <div class="admin-header">
+                    <span>⚠️ ¡ACCESO CONCEDIDO!</span>
+                    <button class="logout-btn" id="logoutBtn">✕ Salir</button>
+                  </div>
+                  <div class="admin-body">
+                    <p>🎯 <strong>Router Admin Panel – Acceso Total</strong></p>
+                    <div class="exposed-info">
+                      <div>📡 SSID: HomeNetwork_5G · Contraseña WiFi: <code>familia2024!</code></div>
+                      <div>🌐 IP Externa: 201.x.x.x · DNS: 8.8.8.8</div>
+                      <div>📋 Dispositivos conectados: 12 activos</div>
+                      <div>🔑 Contraseña admin: <code>admin</code> (¡Por defecto!)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="attack-log" id="attackLog">
+              <div class="log-header">
+                <span class="log-dot"></span> Log de Ataque
+              </div>
+              <div class="log-body" id="logBody">
+                <span class="log-hint">Haz clic en una credencial o escribe y presiona Login...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lab 2: Exposed Files -->
+      <div class="lab-panel" id="lab2">
+        <div class="lab-layout">
+          <div class="lab-info">
+            <div class="lab-badge danger">ALTO</div>
+            <h3>Lab 02 – Archivos Sensibles Expuestos</h3>
+            <p>Archivos de configuración, backups y secretos expuestos en servidores web son una mina de oro para atacantes. Con simples peticiones HTTP pueden obtener credenciales de base de datos, API keys y más.</p>
+            <div class="vuln-detail">
+              <div class="vuln-item"><strong>CWE-538</strong> · Archivos sensibles en código fuente</div>
+              <div class="vuln-item"><strong>Impacto:</strong> Robo de credenciales, acceso a BD, API keys</div>
+              <div class="vuln-item"><strong>Técnica:</strong> Directory bruteforce, Google Dorks</div>
+            </div>
+            <div class="google-dorks">
+              <h4>Google Dorks para encontrarlos:</h4>
+              <code class="dork-code">site:ejemplo.com filetype:env</code>
+              <code class="dork-code">site:ejemplo.com "DB_PASSWORD"</code>
+              <code class="dork-code">intitle:"index of" ".git"</code>
+              <code class="dork-code">site:ejemplo.com filetype:sql "dump"</code>
+            </div>
+          </div>
+          <div class="lab-demo">
+            <div class="browser-mockup">
+              <div class="browser-bar">
+                <div class="browser-dots">
+                  <span class="dot red-dot"></span>
+                  <span class="dot yellow-dot"></span>
+                  <span class="dot green-dot"></span>
+                </div>
+                <div class="browser-url" id="fileUrl">🔓 http://victima.com/</div>
+              </div>
+              <div class="browser-content">
+                <div class="file-explorer" id="fileExplorer">
+                  <div class="file-tree-header">Index of /</div>
+                  <div class="file-tree">
+                    <div class="file-item dir" data-path="/uploads">/uploads/</div>
+                    <div class="file-item dir" data-path="/assets">/assets/</div>
+                    <div class="file-item dir clickable" data-path="/.git" data-type="git">/.git/ <span class="file-tag danger">¡PELIGRO!</span></div>
+                    <div class="file-item file clickable" data-path="/.env" data-type="env">.env <span class="file-tag danger">¡CRÍTICO!</span></div>
+                    <div class="file-item file clickable" data-path="/config.yml" data-type="config">config.yml <span class="file-tag warning">SENSIBLE</span></div>
+                    <div class="file-item file clickable" data-path="/backup_db.sql" data-type="sql">backup_db.sql <span class="file-tag danger">¡CRÍTICO!</span></div>
+                    <div class="file-item file clickable" data-path="/debug.log" data-type="log">debug.log <span class="file-tag warning">SENSIBLE</span></div>
+                  </div>
+                </div>
+                <div class="file-content hidden" id="fileContent">
+                  <div class="file-content-header">
+                    <button class="back-btn" id="backBtn">← Volver</button>
+                    <span id="fileContentTitle"></span>
+                  </div>
+                  <pre class="file-content-body" id="fileContentBody"></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lab 3: Verbose Error -->
+      <div class="lab-panel" id="lab3">
+        <div class="lab-layout">
+          <div class="lab-info">
+            <div class="lab-badge medium">MEDIO</div>
+            <h3>Lab 03 – Mensajes de Error Verbosos</h3>
+            <p>Los errores detallados revelan información valiosa: rutas del servidor, versiones de librerías, estructura de base de datos, y hasta fragmentos de código fuente que facilitan ataques dirigidos.</p>
+            <div class="vuln-detail">
+              <div class="vuln-item"><strong>CWE-209</strong> · Información sensible en mensajes de error</div>
+              <div class="vuln-item"><strong>Impacto:</strong> Reconocimiento del sistema, ataques dirigidos</div>
+              <div class="vuln-item"><strong>Ejemplo real:</strong> Django DEBUG=True, PHP display_errors=On</div>
+            </div>
+            <div class="info-revealed">
+              <h4>Información que se revela:</h4>
+              <ul>
+                <li>🗂️ Rutas absolutas del servidor</li>
+                <li>📦 Versiones de frameworks y librerías</li>
+                <li>🗄️ Estructura de tablas de BD</li>
+                <li>💻 Fragmentos de código fuente</li>
+                <li>🔑 Variables de entorno</li>
+              </ul>
+            </div>
+          </div>
+          <div class="lab-demo">
+            <div class="browser-mockup">
+              <div class="browser-bar">
+                <div class="browser-dots">
+                  <span class="dot red-dot"></span>
+                  <span class="dot yellow-dot"></span>
+                  <span class="dot green-dot"></span>
+                </div>
+                <div class="browser-url">🔓 http://victima.com/user?id=99999</div>
+              </div>
+              <div class="browser-content">
+                <div class="error-demo">
+                  <div class="error-type-selector">
+                    <button class="err-btn active" data-err="django" id="err-django">Django Error</button>
+                    <button class="err-btn" data-err="php" id="err-php">PHP Error</button>
+                    <button class="err-btn" data-err="java" id="err-java">Java Stack Trace</button>
+                    <button class="err-btn" data-err="secure" id="err-secure">✅ Error Seguro</button>
+                  </div>
+                  <div class="error-output" id="errorOutput">
+                    <!-- Filled by JS -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lab 4: Security Headers -->
+      <div class="lab-panel" id="lab4">
+        <div class="lab-layout">
+          <div class="lab-info">
+            <div class="lab-badge medium">MEDIO</div>
+            <h3>Lab 04 – Headers de Seguridad HTTP</h3>
+            <p>Las cabeceras HTTP de seguridad son la primera línea de defensa del navegador. Su ausencia permite ataques XSS, clickjacking, MIME sniffing y más.</p>
+            <div class="vuln-detail">
+              <div class="vuln-item"><strong>CWE-16</strong> · Misconfiguration</div>
+              <div class="vuln-item"><strong>Impacto:</strong> XSS, Clickjacking, MITM</div>
+              <div class="vuln-item"><strong>Herramienta:</strong> securityheaders.com</div>
+            </div>
+          </div>
+          <div class="lab-demo">
+            <div class="headers-analyzer" id="headersAnalyzer">
+              <div class="analyzer-title">Analizador de Headers HTTP</div>
+              <div class="url-input-group">
+                <input type="text" id="urlInput" class="url-input" value="http://victima-vulnerable.com" placeholder="URL del sitio..." />
+                <button class="analyze-btn" id="analyzeBtn">Analizar</button>
+              </div>
+              <div class="headers-result" id="headersResult"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lab 5: Debug Mode -->
+      <div class="lab-panel" id="lab5">
+        <div class="lab-layout">
+          <div class="lab-info">
+            <div class="lab-badge danger">CRÍTICO</div>
+            <h3>Lab 05 – Modo Debug en Producción</h3>
+            <p>Aplicaciones con DEBUG=True exponen paneles interactivos como el de Django que permiten ejecutar código Python arbitrario desde el navegador, comprometiendo completamente el servidor.</p>
+            <div class="vuln-detail">
+              <div class="vuln-item"><strong>CWE-94</strong> · Inyección de código</div>
+              <div class="vuln-item"><strong>Impacto:</strong> RCE (Remote Code Execution)</div>
+              <div class="vuln-item"><strong>Caso real:</strong> Shodan encuentra miles de instancias expuestas</div>
+            </div>
+            <div class="rce-info">
+              <h4>¿Qué puede hacer un atacante?</h4>
+              <ul>
+                <li>💻 Ejecutar comandos del sistema operativo</li>
+                <li>📂 Leer/escribir archivos del servidor</li>
+                <li>🔑 Robar credenciales de BD</li>
+                <li>🌐 Moverse lateralmente en la red</li>
+                <li>🚪 Instalar backdoors</li>
+              </ul>
+            </div>
+          </div>
+          <div class="lab-demo">
+            <div class="browser-mockup">
+              <div class="browser-bar">
+                <div class="browser-dots">
+                  <span class="dot red-dot"></span>
+                  <span class="dot yellow-dot"></span>
+                  <span class="dot green-dot"></span>
+                </div>
+                <div class="browser-url">🔓 http://victima.com/error?debug=true</div>
+              </div>
+              <div class="browser-content debug-panel-content">
+                <div class="debug-panel">
+                  <div class="debug-header">
+                    <div class="debug-title">
+                      <span class="debug-icon">⚡</span>
+                      Django Debug Panel · <code>DEBUG = True</code>
+                    </div>
+                    <div class="debug-warning">⚠️ ¡MODO DEBUG ACTIVO EN PRODUCCIÓN!</div>
+                  </div>
+                  <div class="debug-body">
+                    <div class="debug-env">
+                      <h4>Variables de Entorno Expuestas:</h4>
+                      <div class="env-vars">
+                        <div class="env-var"><span class="env-key">SECRET_KEY</span><span class="env-val">django-insecure-xk2j8...</span></div>
+                        <div class="env-var"><span class="env-key">DB_PASSWORD</span><span class="env-val">SuperSecret123!</span></div>
+                        <div class="env-var"><span class="env-key">AWS_SECRET_KEY</span><span class="env-val">wJalrXUtnFEMI/K7MDENG...</span></div>
+                        <div class="env-var"><span class="env-key">STRIPE_SECRET</span><span class="env-val">sk_live_4eC39HqLyjWDs...</span></div>
+                      </div>
+                    </div>
+                    <div class="debug-console">
+                      <h4>Consola Interactiva (¡Ejecución Remota de Código!):</h4>
+                      <div class="console-history" id="consoleHistory">
+                        <div class="console-line output">Python 3.11.0 | Django 4.2.0</div>
+                        <div class="console-line prompt">>>> </div>
+                      </div>
+                      <div class="console-input-row">
+                        <span class="console-prompt-icon">>>></span>
+                        <input type="text" class="console-input" id="consoleInput" placeholder='import os; os.system("whoami")' />
+                        <button class="console-run" id="consoleRun">▶ Ejecutar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MITIGACION -->
+  <section class="section" id="mitigacion">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">03 · Defensa</span>
+        <h2 class="section-title">Estrategias de Mitigación</h2>
+        <p class="section-desc">Cómo proteger tu aplicación contra cada tipo de Security Misconfiguration.</p>
+      </div>
+
+      <div class="mitigation-compare">
+        <div class="compare-panel vulnerable">
+          <div class="compare-header">
+            <span class="compare-icon">❌</span>
+            <h3>Configuración Vulnerable</h3>
+          </div>
+          <div class="code-block">
+            <div class="code-lang">Python / Django</div>
+            <pre><code><span class="code-comment"># settings.py - ¡INSEGURO!</span>
+DEBUG = <span class="code-bool">True</span>              <span class="code-comment"># Expone info sensible</span>
+SECRET_KEY = <span class="code-str">"django-insecure-abc"</span>
+ALLOWED_HOSTS = [<span class="code-str">'*'</span>]  <span class="code-comment"># Acepta cualquier host</span>
+
+<span class="code-comment"># Contraseña de BD hardcodeada</span>
+DATABASES = {
+  <span class="code-str">'default'</span>: {
+    <span class="code-str">'PASSWORD'</span>: <span class="code-str">'admin123'</span>,
+  }
+}
+
+<span class="code-comment"># Sin HTTPS forzado</span>
+SECURE_SSL_REDIRECT = <span class="code-bool">False</span>
+SESSION_COOKIE_SECURE = <span class="code-bool">False</span></code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-lang">Nginx</div>
+            <pre><code><span class="code-comment"># nginx.conf - ¡INSEGURO!</span>
+server {
+  listen 80;           <span class="code-comment"># Sin HTTPS</span>
+  autoindex <span class="code-bool">on</span>;        <span class="code-comment"># Lista directorios</span>
+  
+  <span class="code-comment"># Sin headers de seguridad</span>
+  server_tokens <span class="code-bool">on</span>;    <span class="code-comment"># Revela versión</span>
+}</code></pre>
+          </div>
+        </div>
+
+        <div class="compare-panel secure">
+          <div class="compare-header">
+            <span class="compare-icon">✅</span>
+            <h3>Configuración Segura</h3>
+          </div>
+          <div class="code-block">
+            <div class="code-lang">Python / Django</div>
+            <pre><code><span class="code-comment"># settings.py - SEGURO</span>
+DEBUG = <span class="code-bool-sec">False</span>             <span class="code-comment"># Desactivado en producción</span>
+SECRET_KEY = os.environ[<span class="code-str">'SECRET_KEY'</span>]
+ALLOWED_HOSTS = [<span class="code-str">'midominio.com'</span>]
+
+<span class="code-comment"># Credenciales desde variables de entorno</span>
+DATABASES = {
+  <span class="code-str">'default'</span>: {
+    <span class="code-str">'PASSWORD'</span>: os.environ[<span class="code-str">'DB_PASSWORD'</span>],
+  }
+}
+
+<span class="code-comment"># HTTPS y cookies seguras</span>
+SECURE_SSL_REDIRECT = <span class="code-bool-sec">True</span>
+SESSION_COOKIE_SECURE = <span class="code-bool-sec">True</span>
+SECURE_HSTS_SECONDS = <span class="code-num">31536000</span></code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-lang">Nginx</div>
+            <pre><code><span class="code-comment"># nginx.conf - SEGURO</span>
+server {
+  listen 443 ssl http2;
+  autoindex <span class="code-bool-sec">off</span>;
+  server_tokens <span class="code-bool-sec">off</span>;   <span class="code-comment"># Oculta versión</span>
+  
+  <span class="code-comment"># Headers de seguridad</span>
+  add_header X-Frame-Options <span class="code-str">DENY</span>;
+  add_header X-Content-Type-Options <span class="code-str">nosniff</span>;
+  add_header Content-Security-Policy <span class="code-str">"default-src 'self'"</span>;
+  add_header Strict-Transport-Security <span class="code-str">"max-age=31536000"</span>;
+}</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHECKLIST -->
+  <section class="section dark-section" id="checklist">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">04 · Herramienta</span>
+        <h2 class="section-title">Security Checklist Interactivo</h2>
+        <p class="section-desc">Evalúa tu aplicación marcando los controles que ya tienes implementados.</p>
+      </div>
+
+      <div class="checklist-container">
+        <div class="checklist-progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-label">
+          <span id="progressText">0 / 18 controles implementados</span>
+          <span id="progressScore" class="score-badge">Seguridad: 0%</span>
+        </div>
+
+        <div class="checklist-categories">
+          <div class="checklist-cat">
+            <h4>🔑 Autenticación y Acceso</h4>
+            <div class="check-items" id="checkAuth"></div>
+          </div>
+          <div class="checklist-cat">
+            <h4>⚙️ Configuración del Servidor</h4>
+            <div class="check-items" id="checkServer"></div>
+          </div>
+          <div class="checklist-cat">
+            <h4>🛡️ Headers y Protocolo</h4>
+            <div class="check-items" id="checkHeaders"></div>
+          </div>
+          <div class="checklist-cat">
+            <h4>📁 Archivos y Datos</h4>
+            <div class="check-items" id="checkFiles"></div>
+          </div>
+          <div class="checklist-cat">
+            <h4>📊 Monitoreo y Logs</h4>
+            <div class="check-items" id="checkMonitor"></div>
+          </div>
+        </div>
+
+        <div class="checklist-result" id="checklistResult"></div>
+
+        <button class="reset-btn" id="resetChecklist">🔄 Reiniciar Checklist</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <div class="logo-icon small">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <span>Security Misconfiguration · Caso Práctico</span>
+        </div>
+        <div class="footer-links">
+          <a href="https://owasp.org/Top10/A02_2025-Security_Misconfiguration/" target="_blank">OWASP A02:2025</a>
+          <a href="https://cwe.mitre.org/data/definitions/16.html" target="_blank">CWE-16</a>
+          <a href="https://securityheaders.com" target="_blank">SecurityHeaders.com</a>
+        </div>
+        <div class="footer-disclaimer">
+          ⚠️ Solo para fines educativos. No usar en sistemas sin autorización.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
