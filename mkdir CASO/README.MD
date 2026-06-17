@@ -1,2 +1,9 @@
 PRACTICA
 
+start index.html
+
+# Instalar live-server (solo la primera vez)
+npm install -g live-server
+
+# Correrlo
+live-server
